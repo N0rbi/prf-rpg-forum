@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  db:
+    image: mongo
+    container_name: "mongodb"
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles
+  api:
+    build: ./api
+    container_name: "nodejs"
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    links:
+      - db
+volumes:
+  data-volume:
