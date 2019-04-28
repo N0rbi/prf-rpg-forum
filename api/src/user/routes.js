@@ -7,7 +7,7 @@ var router = express.Router();
 
 router.post("/signup", (req, res)=> {
   var nickname = req.body.nickname;
-  var password = req.body.passport;
+  var password = req.body.password;
   if (!nickname) {
     return res.status(404).send({message: "nickname missing"});
   }
@@ -27,7 +27,7 @@ router.post("/signup", (req, res)=> {
 
 router.post("/login", (req, res) => {
   var nickname = req.body.nickname;
-  var password = req.body.passport;
+  var password = req.body.password;
   if (!nickname) {
     return res.status(404).send({message: "nickname missing"});
   }

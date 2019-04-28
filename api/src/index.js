@@ -53,7 +53,7 @@ function setupPassport(passport, app, userModel) {
   });
 
   passport.deserializeUser(function(user, done) {
-      if(!user) return done("serialization problem", user);
+      if(!user) return done("deserialization problem", user);
       return done(null, user);
   });
 
