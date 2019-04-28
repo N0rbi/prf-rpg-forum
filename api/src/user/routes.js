@@ -18,10 +18,10 @@ router.post("/signup", (req, res)=> {
   var user = new userModel({username: username, password: password});
   user.save((err)=> {
     if (err) {
-      return res.status(500).send({message: "internal error"});
+      return res.status(500).send({message: "internal error", error: err});
     }
     //TODO: autologin
-    return res.status(200).send({message: "authenticated"});
+    return res.status(200).send({message: "authenticated", user: user});
   });
 });
 
@@ -40,7 +40,7 @@ router.post("/login", (req, res) => {
       } else {
           req.logIn(username, function (error) {
               if (error) return res.status(500).send(error);
-              return res.status(200).send({message: "login successful"});
+              return res.status(200).send({message: "login successful", user: username});
           })
       }
   })(req, res);
