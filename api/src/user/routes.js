@@ -6,16 +6,16 @@ const userModel = mongoose.model('user');
 var router = express.Router();
 
 router.post("/signup", (req, res)=> {
-  var nickname = req.body.nickname;
+  var username = req.body.username;
   var password = req.body.password;
-  if (!nickname) {
-    return res.status(404).send({message: "nickname missing"});
+  if (!username) {
+    return res.status(404).send({message: "username missing"});
   }
   if (!password) {
-    return res.status(404).send({message: "password missing"});
+    return res.status(404).send({message: "password missing", body: req});
   }
 
-  var user = new userModel({nickname: nickname, password: password});
+  var user = new userModel({username: username, password: password});
   user.save((err)=> {
     if (err) {
       return res.status(500).send({message: "internal error"});
@@ -26,10 +26,10 @@ router.post("/signup", (req, res)=> {
 });
 
 router.post("/login", (req, res) => {
-  var nickname = req.body.nickname;
+  var username = req.body.username;
   var password = req.body.password;
-  if (!nickname) {
-    return res.status(404).send({message: "nickname missing"});
+  if (!username) {
+    return res.status(404).send({message: "username missing"});
   }
   if (!password) {
     return res.status(404).send({message: "password missing"});
