@@ -64,4 +64,8 @@ router.get("/debug", function(req, res) {
 })});
 
 
+router.get("/isAuthenticated", function(req, res) {
+  return res.status(200).send({isAuthenticated: req.isAuthenticated()});
+});
+
 module.exports = router;
