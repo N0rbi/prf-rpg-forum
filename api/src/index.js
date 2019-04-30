@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-var dbPath = "mongodb://db:27017";
+var dbPath = "mongodb://localhost:27017";
 app.set("dbPath", dbPath);
 
 require("./user/user.model");
@@ -56,6 +56,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", require("./user/routes"));
+app.use("/character", require("./character/routes"));
 
 
 app.listen(8080, () => {

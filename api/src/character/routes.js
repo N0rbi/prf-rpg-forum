@@ -49,12 +49,12 @@ router.route("/")
       })
       .put((req, res) => {
         if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
-        var character = {name: req.body.character.name,
-                        race: req.body.character.race,
-                        type: req.body.character.type,
+        var character = {name: req.body.name,
+                        race: req.body.race,
+                        type: req.body.type,
                         commentNum: 0,
-                        hp: req.body.character.hp,
-                        attack: req.body.character.attack,
+                        hp: req.body.hp,
+                        attack: req.body.attack,
                         level: 1};
         userModel.findOneAndUpdate(
           {username: req.user.username},
@@ -62,10 +62,7 @@ router.route("/")
           {new: true},
           (err,user) => {
             if (err) res.status(500).send({message: "character could not be added", error: err});
-            var result = user.characters.find(char => {
-              return char._id === character_id
-            });
-            return res.status(200).send({message: "character added", character: result});
+            return res.status(200).send({message: "character added", user: user});
           });
       })
       .delete((req, res) => {

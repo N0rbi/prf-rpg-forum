@@ -29,4 +29,11 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/user-details']);
   }
 
+  onMainPage() {
+    this.router.navigate(['/main']);
+  }
+
+  onCharacterCreator() {
+    this.router.navigate(['/character-creator']);
+  }
 }

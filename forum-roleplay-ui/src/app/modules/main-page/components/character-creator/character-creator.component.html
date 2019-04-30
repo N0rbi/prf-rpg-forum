@@ -1,0 +1,26 @@
+<app-header></app-header>
+<div class="container">
+  <mat-form-field>
+    <input matInput [(ngModel)]="character.name" placeholder="Név">
+  </mat-form-field>
+
+  <mat-form-field>
+      <mat-select  [(ngModel)]="character.race" name="race" placeholder="Faj">
+        <mat-option *ngFor="let race of raceCollection" [value]="race">
+          {{race}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select  [(ngModel)]="character.type" name="type" placeholder="Specializáció">
+        <mat-option *ngFor="let type of typeCollection" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+</div>
+
+<mat-card-actions align="end">
+    <button mat-raised-button color="primary" (click)="createCharacter()">Készítés</button>
+</mat-card-actions>
