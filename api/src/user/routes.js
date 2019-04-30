@@ -56,10 +56,10 @@ router.post('/logout', function(req, res) {
 });
 
 router.get("/debug", function(req, res) {
-  var username = (req.user || {}).displayName;
+  var username = (req.user || {}).username;
   console.log(req.user);
   userModel.findOne({username: username}, function(err, user) {
-      if(!user || err) return res.status(500).send({message: "user not found"});
+      if(!user || err) return res.status(500).send({message: "user not found", error: err});
       return res.status(200).send({message: "user found", user: user});
 })});
 

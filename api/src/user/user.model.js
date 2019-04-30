@@ -6,8 +6,8 @@ var userSchema = new mongoose.Schema({
     password: {type: String, required: true},
     characters: [{
       name: {type: String, required: true, lowercase: true},
-      race: {type: String, required: true},
-      type: {type: String, required: true},
+      race: {type: String, required: true, lowercase: true},
+      type: {type: String, required: true, lowercase: true},
       commentNum: {type: Number, required: true, min: 0},
       hp: {type: Number, required: true, min: 0},
       attack: {type: Number, required: true, min: 0},
