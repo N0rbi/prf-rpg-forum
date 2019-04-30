@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    MatButtonModule, 
-    MatCheckboxModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatSelectModule, 
-    MatOptionModule, 
-    MatAutocompleteModule, 
-    MatCardModule, 
-    MatListModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
-    MatChipsModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatAutocompleteModule,
+    MatCardModule,
+    MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatChipsModule,
+    MatMenuModule
 } from '@angular/material';
 
 
@@ -31,7 +32,8 @@ import {
     MatListModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatChipsModule
+    MatChipsModule,
+    MatMenuModule
   ],
   exports: [
     MatButtonModule,
@@ -47,7 +49,8 @@ import {
     MatListModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatChipsModule
+    MatChipsModule,
+    MatMenuModule
   ]
 })
 export class MaterialModule {}

@@ -68,4 +68,14 @@ router.get("/isAuthenticated", function(req, res) {
   return res.status(200).send({isAuthenticated: req.isAuthenticated()});
 });
 
+router.get('/fetchUser', function(req, res) {
+  if(req.isAuthenticated()) {
+      userModel.find({username: req.query.username}, function(err, user) {
+          return res.status(200).send(user[0]);
+      })
+  } else {
+      return res.status(403).send({message: "Unauthorized access"});
+  }
+});
+
 module.exports = router;

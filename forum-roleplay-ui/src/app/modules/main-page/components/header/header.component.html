@@ -1,3 +1,8 @@
-<p>
-  header works!
-</p>
+<div>
+  <span>Helló, {{username}}</span>
+  <button style="float: right;" mat-button [matMenuTriggerFor]="menu"><i class="material-icons">expand_more</i></button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="onUserDetails()">Profil megtekintése</button>
+    <button mat-menu-item (click)="onLogout()">Kijelentkezés</button>
+  </mat-menu>
+</div>

@@ -6,21 +6,29 @@ const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const cors = require('cors');
-require("./user/user.model");
 
 var app = express();
+app.use(cors({origin:["http://localhost:4200"],credentials: true}));
 
-//userModel = setupMongo(mongoose, app);
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 var dbPath = "mongodb://db:27017";
 app.set("dbPath", dbPath);
+
+require("./user/user.model");
+const userModel = mongoose.model('user');
+
 mongoose.connect(dbPath);
+
+mongoose.connection.on('connected', ()=> {
+  console.log('db connected');
+})
 
 mongoose.connection.on('error', () => {
   console.log('db connection error');
 });
-
-const userModel = mongoose.model('user');
-
 
 passport.serializeUser(function(user, done) {
   if(!user) return done("serialization problem", user);
@@ -43,17 +51,12 @@ new localStrategy(function(username, password, done) {
   });
 }));
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(cookieParser());
-
-app.use(cors());
-
 app.use(expressSession({secret: 'admin123'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", require("./user/routes"));
+
 
 app.listen(8080, () => {
     console.log('the server is running');
