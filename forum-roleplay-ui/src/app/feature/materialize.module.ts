@@ -14,7 +14,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
 } from '@angular/material';
 
 
@@ -35,7 +36,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ],
   exports: [
     MatButtonModule,
@@ -53,7 +55,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ]
 })
 export class MaterialModule {}
