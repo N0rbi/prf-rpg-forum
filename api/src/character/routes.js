@@ -14,37 +14,37 @@ router.get("/all", (req, res) => {
     })
 });
 
+router.route("/:character_id")
+    .get((req, res) => {
+            if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
+            var character_id = req.params.character_id;
+            userModel.findOne(
+              {username: req.user.username, "characters": {$elemMatch: {"_id": mongoose.Types.ObjectId(character_id)}}},
+              (err,user) => {
+                if (!user || err) return res.status(500).send({message: "character not found", error: err});
+                var result = user.characters.find(char => {
+                  return char.id === character_id
+                });
+                return res.status(200).send({message: "character found", character: result});
+              });
+    });
+
 router.route("/")
-      .get((req, res) => {
-        if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
-        var character_id = req.body.character_id;
-        userModel.findOne(
-          {username: req.user.username, "characters": {$elemMatch: {"_id": mongoose.Types.ObjectId(character_id)}}},
-          (err,user) => {
-            if (!user || err) return res.status(500).send({message: "character not found", error: err});
-            var result = user.characters.find(char => {
-              return char.id === character_id
-            });
-            return res.status(200).send({message: "character added", character: result});
-          });
-      })
       .post((req, res) => {
         if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
         var character_id = req.body.character_id;
-        var character = [];
+        var character = {};
         Object.keys(req.body.character).forEach((key) => {
-          character["character.$."+key] = req.body.character[key];
+          character["characters.$."+key] = req.body.character[key];
         });
-        console.log(
-         character
-        );
+        console.log(character);
         userModel.findOneAndUpdate(
           {username: req.user.username, "characters": {$elemMatch: {"_id": mongoose.Types.ObjectId(character_id)}}},
           {$set: character},
           {new: true},
           (err,user) => {
-            if (!user || err) res.status(500).send({message: "character could not be modified", error: err});
-            return res.status(200).send({message: "character updated", user: user});
+            if (!user || err) return res.status(500).send({message: "character could not be modified", error: err});
+            return res.status(200).send({message: "character updated"});
           });
       })
       .put((req, res) => {
@@ -67,6 +67,15 @@ router.route("/")
       })
       .delete((req, res) => {
         if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
+        var character_id = req.body.character_id;
+        userModel.findOneAndUpdate(
+                  {username: req.user.username},
+                  {$pull: {"characters": {_id: mongoose.Types.ObjectId(character_id)}}},
+                  {new: true},
+                  (err,user) => {
+                    if (err) return res.status(500).send({message: "character could not be deleted", error: err});
+                    return res.status(200).send({message: "character deleted"});
+                  });
       });
 
 module.exports = router;

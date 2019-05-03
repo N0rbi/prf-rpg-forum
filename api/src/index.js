@@ -14,11 +14,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-var dbPath = "mongodb://localhost:27017";
+var dbPath = "mongodb://db:27017";
 app.set("dbPath", dbPath);
 
 require("./user/user.model");
 const userModel = mongoose.model('user');
+
+
 
 mongoose.connect(dbPath);
 
@@ -26,8 +28,8 @@ mongoose.connection.on('connected', ()=> {
   console.log('db connected');
 })
 
-mongoose.connection.on('error', () => {
-  console.log('db connection error');
+mongoose.connection.on('error', (err) => {
+  console.log('db connection error: ' + err);
 });
 
 passport.serializeUser(function(user, done) {
