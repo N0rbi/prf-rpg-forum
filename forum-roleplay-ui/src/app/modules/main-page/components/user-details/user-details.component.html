@@ -3,13 +3,14 @@
     <mat-list-item role="listitem">Felhasználónév: {{userData.username}}</mat-list-item>
     <mat-list-item role="listitem">Karakterek:</mat-list-item>
     <mat-tab-group>
-        <mat-tab *ngFor="let character of userData.characters" label="{{character.name}}">
+        <mat-tab *ngFor="let character of characterList" label="{{character.name}}">
           <div>Név: {{character.name}}</div>
           <div>Faj: {{character.race}}</div>
           <div>Specializáció: {{character.type}}</div>
           <div>Életerő: {{character.hp}}</div>
           <div>Támadás: {{character.attack}}</div>
           <div>Szint: {{character.level}}</div>
+          <button mat-raised-button color="primary" (click)="deleteCharacter(character._id)">Karakter törlése</button>
         </mat-tab>
     </mat-tab-group>
   </mat-list>

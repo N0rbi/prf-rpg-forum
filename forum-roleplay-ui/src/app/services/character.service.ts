@@ -26,4 +26,8 @@ export class CharacterService {
   createNewCharacter(character: Character): Observable<any> {
     return this.http.put(`${environment.backendUrl}/character`, character, {withCredentials: true});
   }
+
+  deleteCharacter(characterID: string) {
+    return this.http.delete(`${environment.backendUrl}/character?character_id=${characterID}`, {withCredentials: true});
+  }
 }

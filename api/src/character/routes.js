@@ -67,7 +67,7 @@ router.route("/")
       })
       .delete((req, res) => {
         if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
-        var character_id = req.body.character_id;
+        var character_id = req.query.character_id;
         userModel.findOneAndUpdate(
                   {username: req.user.username},
                   {$pull: {"characters": {_id: mongoose.Types.ObjectId(character_id)}}},
