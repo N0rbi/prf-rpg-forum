@@ -34,6 +34,17 @@ router.get('/fetchForum', function(req, res) {
     })
 });
 
+router.get('/fetchAllForums', function(req, res) {
+    if (!req.isAuthenticated()) {
+        return res.status(401).send({message: "Unauthorized access"});
+    }
+    forumModel.find({}, function(err, forums) {
+        return res.status(200).send(forums);
+    }, err => {
+        return res.status(500).send(err);
+    })
+})
+
 
 router.put('/playerJoin', function(req, res) {
     if (!req.isAuthenticated()) {
