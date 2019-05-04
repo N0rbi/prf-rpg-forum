@@ -44,10 +44,19 @@ export class GameCreatorComponent implements OnInit {
   createGame() {
     this.forumService.createForum(this.forum).subscribe(res => {
       this.toastr.success(res.message);
+
+      this.updateForumStore();
+
       this.dialogRef.close();
     }, err => {
       const errorMessage = JSON.stringify(err);
       this.toastr.error(errorMessage);
+    });
+  }
+
+  private updateForumStore() {
+    this.forumService.fetchAllForum().subscribe(forums => {
+      this.forumService.updateForumStore(forums);
     });
   }
 

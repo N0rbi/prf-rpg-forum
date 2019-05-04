@@ -65,8 +65,8 @@ router.put('/playerJoin', function(req, res) {
                     level: req.body.characterLevel
                 }
             }}
-        }, () => {
-            return res.status(200).send({message: "Sikeresen regisztrálva a játékba!"})
+        }, (forum) => {
+            return res.status(200).send({message: "Sikeresen regisztrálva a játékba!", forum: forum})
         }, err => {
             return res.status(500).send({message: "Nem sikerült regisztrálni", err: err})
         }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Forum } from '../models/forum.interface';
 
@@ -9,6 +9,9 @@ import { Forum } from '../models/forum.interface';
 })
 
 export class ForumService {
+
+    private forumSource: BehaviorSubject<any> = new BehaviorSubject(null);
+    forumStore = this.forumSource.asObservable();
 
     httpOptions = {};
 
@@ -21,6 +24,10 @@ export class ForumService {
         };
     }
 
+    public updateForumStore(newForum): void {
+        this.forumSource.next(newForum);
+    }
+
     public fetchAllForum(): Observable<any> {
         return this.http.get(`${environment.backendUrl}/forum/fetchAllForums`, this.httpOptions);
     }
@@ -30,13 +37,11 @@ export class ForumService {
     }
 
     public createForum(forum: Forum): Observable<any> {
-        console.log(forum);
         return this.http.post(`${environment.backendUrl}/forum/createForum`, forum, this.httpOptions)
     }
 
-    public playerJoin(): Observable<any> {
-        return;
-        // return this.http.put(`${environment.backendUrl}/forum/playerJoin`, {}, this.httpOptions);
+    public playerJoin(playerData): Observable<any> {
+        return this.http.put(`${environment.backendUrl}/forum/playerJoin`, playerData, this.httpOptions);
     }
 
 }
