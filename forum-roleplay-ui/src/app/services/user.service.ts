@@ -51,6 +51,10 @@ export class UserService {
     public fetchUser(username: string) {
         return this.http.get(`${environment.backendUrl}/auth/fetchUser?username=${username}`, {withCredentials: true});
     }
+
+    public fetchAuthenticatedUser() {
+        return this.http.get(`${environment.backendUrl}/auth/fetchAuthenticatedUser`, {withCredentials: true});
+    }
 }
 
 interface User {

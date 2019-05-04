@@ -1,8 +1,9 @@
 import { Character } from './character.interface';
 
 export interface User {
-    id: string;
+    _id: string;
     username: string;
     password: string;
-    character: Character[];
+    characters: Character[];
+    __v: number;
 }

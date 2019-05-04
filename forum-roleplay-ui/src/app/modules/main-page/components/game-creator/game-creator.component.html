@@ -1,0 +1,24 @@
+<div class="game-creator-container">
+  <div>Új játék készítése</div>
+    <div class="game-creator-content">
+      <mat-form-field>
+        <textarea matInput
+                  placeholder="Történet"
+                  [(ngModel)]="forum.theme"
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  ckdAutosizeMaxRows="5">
+        </textarea>
+      </mat-form-field>
+      <mat-form-field>
+          <input type="number" [(ngModel)]="forum.playerNumber" min="2" max="5" matInput placeholder="Játékosok száma">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="number" [(ngModel)]="forum.minLevel" min="1" max="20" matInput placeholder="Minimum szint">
+      </mat-form-field>
+    </div>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="createGame()">Létrehozás</button>
+    </mat-card-actions>
+</div>

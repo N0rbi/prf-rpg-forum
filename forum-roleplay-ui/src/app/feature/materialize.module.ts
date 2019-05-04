@@ -14,7 +14,9 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatGridListModule,
 } from '@angular/material';
 
 
@@ -35,7 +37,9 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatGridListModule
   ],
   exports: [
     MatButtonModule,
@@ -53,7 +57,9 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatGridListModule
   ]
 })
 export class MaterialModule {}

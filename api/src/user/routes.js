@@ -76,33 +76,15 @@ router.get('/fetchUser', function(req, res) {
           return res.status(200).send(user[0]);
       })
   } else {
-      return res.status(403).send({message: "Unauthorized access"});
+      return res.status(401).send({message: "Unauthorized access"});
   }
 });
 
-router.post('/createCharacter', function(req, res) {
-  if (req.isAuthenticated()) {
-    userModel.update(
-      {username: req.query.username},
-      {
-        $push: {characters: {
-          name: req.body.name,
-          race: req.body.race,
-          type: req.body.type,
-          commentNum: req.body.commentNum,
-          hp: req.body.hp,
-          attack: req.body.attack,
-          level: req.body.level
-        }}
-      }
-    , () => {
-      return res.status(200).send({message: "A karakter sikeresen létrehozva!"});
-    }, err => {
-      return res.status(500).send({message: "A karaktert nem sikerült létrehozni!"});
-    })
-  } else {
-    return res.status(401).send({message: "Unauthorized access"})
+router.get('/fetchAuthenticatedUser', function(req, res) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).send({message: "Unauthorized access"});
   }
+  return res.status(200).send(req.user);
 });
 
 
