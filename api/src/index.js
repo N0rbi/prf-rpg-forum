@@ -20,6 +20,9 @@ app.set("dbPath", dbPath);
 require("./user/user.model");
 const userModel = mongoose.model('user');
 
+require("./forum/forum.model");
+const forumModel = mongoose.model('forum');
+
 mongoose.connect(dbPath);
 
 mongoose.connection.on('connected', ()=> {
@@ -57,6 +60,7 @@ app.use(passport.session());
 
 app.use("/auth", require("./user/routes"));
 app.use("/character", require("./character/routes"));
+app.use("/forum", require("./forum/routes"));
 
 
 app.listen(8080, () => {
