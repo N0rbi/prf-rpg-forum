@@ -74,8 +74,15 @@ router.get('/fetchUser', function(req, res) {
           return res.status(200).send(user[0]);
       })
   } else {
-      return res.status(403).send({message: "Unauthorized access"});
+      return res.status(401).send({message: "Unauthorized access"});
   }
 });
+
+router.get('/fetchAuthenticatedUser', function(req, res) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).send({message: "Unauthorized access"});
+  }
+  return res.status(200).send(req.user);
+})
 
 module.exports = router;

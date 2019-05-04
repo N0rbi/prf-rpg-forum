@@ -2,20 +2,20 @@ import { User } from './user.interface';
 
 export interface Forum {
     theme: string;
-    creator: User;
-    post: Post[];
-    players: User[];
+    creator: any;
+    post?: Post[];
+    players?: any[];
     playerNumber: number;
     minLevel: number;
 }
 
 interface Post {
-    pcreator: User;
+    pcreator: any;
     content: string;
     thread: Thread[];
 }
 
 interface Thread {
-    mcreator: User;
+    mcreator: any;
     message: string;
 }

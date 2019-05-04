@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Character } from 'src/app/models/character.interface';
 import { CharacterService } from 'src/app/services/character.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-character-creator',
@@ -18,7 +19,7 @@ export class CharacterCreatorComponent implements OnInit {
   };
   raceCollection = [];
   typeCollection = [];
-  constructor(private characterService: CharacterService, private toastr: ToastrService) { }
+  constructor(private characterService: CharacterService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit() {
     this.raceCollection = this.characterService.raceCollection;
@@ -29,9 +30,14 @@ export class CharacterCreatorComponent implements OnInit {
     this.calculateStats();
     this.characterService.createNewCharacter(this.character).subscribe(res => {
       this.toastr.success(res.message);
+      this.navigateToMain();
     }, err => {
       this.toastr.error(err.message);
     });
+  }
+
+  navigateToMain() {
+    this.router.navigate(['/main']);
   }
 
   private calculateStats() {

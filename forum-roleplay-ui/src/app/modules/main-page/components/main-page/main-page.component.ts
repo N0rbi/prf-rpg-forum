@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { GameCreatorComponent } from '../game-creator/game-creator.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-page',
@@ -10,10 +11,15 @@ import { GameCreatorComponent } from '../game-creator/game-creator.component';
 })
 export class MainPageComponent implements OnInit {
 
-  constructor(private userService: UserService, private dialog: MatDialog) { }
+  constructor(private userService: UserService, private dialog: MatDialog, private router: Router) { }
 
   ngOnInit() {
-    this.userService.isAuthenticated().subscribe(res => console.log(res));
+    this.userService.isAuthenticated().subscribe((res: any) => {
+      if (!res.isAuthenticated) {
+        localStorage.removeItem('user');
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   openNewGameDialog() {
