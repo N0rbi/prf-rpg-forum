@@ -6,17 +6,18 @@ services:
     container_name: "mongodb"
     volumes:
       - data-volume:/data/db
-    ports:
-      - 27017:27017
+    network_mode: host
     command: mongod --smallfiles
   api:
     build: ./api
     container_name: "nodejs"
-    ports:
-      - 8080:8080
+    network_mode: host
     depends_on:
       - db
-    links:
-      - db
+  web:
+    build: ./forum-roleplay-ui
+    container_name: "angular"
+    network_mode: host
+
 volumes:
   data-volume:
