@@ -9,10 +9,17 @@ var forumSchema = new mongoose.Schema({
     post: [{
         postCreator: { type: userModel, require: true },
         content: { type: String, require: true },
+        challenge: {
+            hp: {type: Number, required: true, min: 0},
+            attack: {type: Number, required: true, min: 0},
+            usersPassed: [{type: userModel}]
+        },
         thread: [{
             messageCreator: {type: userModel, require: true},
-            message: {type: String, require: true}
-        }]
+            message: {type: String, require: true},
+            time : { type : Date, default: Date.now }
+        }],
+        time : { type : Date, default: Date.now }
     }],
     players: [{
         user: { type: userModel, require: true },
@@ -26,8 +33,8 @@ var forumSchema = new mongoose.Schema({
             level: {type: Number, required: true, min: 0}
         }
      }],
-    playerNumber: {type: Number, required: true},
-    minLevel: {type: Number, required: true}
+    playerNumber: {type: Number, required: true, default: 0},
+    minLevel: {type: Number, required: true, default: 0}
 }, {collection: 'forum'});
 
 forumSchema.pre('save', function(next) {

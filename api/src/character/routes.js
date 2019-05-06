@@ -27,7 +27,19 @@ router.route("/:character_id")
                 });
                 return res.status(200).send({message: "character found", character: result});
               });
-    });
+    })
+    .delete((req, res) => {
+        if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
+        var character_id = req.params.character_id;
+        userModel.findOneAndUpdate(
+                  {username: req.user.username},
+                  {$pull: {"characters": {_id: mongoose.Types.ObjectId(character_id)}}},
+                  {new: true},
+                  (err,user) => {
+                    if (err) return res.status(500).send({message: "character could not be deleted", error: err});
+                    return res.status(200).send({message: "character deleted"});
+                  });
+      });
 
 router.route("/")
       .post((req, res) => {
@@ -37,7 +49,6 @@ router.route("/")
         Object.keys(req.body.character).forEach((key) => {
           character["characters.$."+key] = req.body.character[key];
         });
-        console.log(character);
         userModel.findOneAndUpdate(
           {username: req.user.username, "characters": {$elemMatch: {"_id": mongoose.Types.ObjectId(character_id)}}},
           {$set: character},
@@ -64,18 +75,6 @@ router.route("/")
             if (err) res.status(500).send({message: "character could not be added", error: err});
             return res.status(200).send({message: "character added", user: user});
           });
-      })
-      .delete((req, res) => {
-        if (!req.isAuthenticated()) return res.status(401).send({message: "unauthorized"});
-        var character_id = req.query.character_id;
-        userModel.findOneAndUpdate(
-                  {username: req.user.username},
-                  {$pull: {"characters": {_id: mongoose.Types.ObjectId(character_id)}}},
-                  {new: true},
-                  (err,user) => {
-                    if (err) return res.status(500).send({message: "character could not be deleted", error: err});
-                    return res.status(200).send({message: "character deleted"});
-                  });
       });
 
 module.exports = router;

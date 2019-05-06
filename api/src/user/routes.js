@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const userModel = mongoose.model('user');
-const ADMIN_NAME_LIST_FILE = "/utils/adminfile";
+const adminService = require("../utils/admin.service");
 
 var router = express.Router();
 
@@ -91,17 +91,10 @@ router.get('/fetchAuthenticatedUser', function(req, res) {
 router.post("/isAdmin", function(req, res) {
     if (req.isAuthenticated()) {
         var username = req.user.username;
-        var adminNames = getAdminNames();
-          return res.status(200).send({isAdmin: adminNames.indexOf(username) != -1});
-
+        return res.status(200).send({isAdmin: adminService.isAdmin(username)});
       } else {
         return res.status(401).send({message: "Unauthorized access"})
       }
 });
-
-function getAdminNames() {
-    var contents = require('fs').readFileSync(ADMIN_NAME_LIST_FILE, 'utf8');
-    return contents.split("\n");
-}
 
 module.exports = router;
