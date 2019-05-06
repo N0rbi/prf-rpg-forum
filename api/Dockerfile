@@ -1,8 +1,12 @@
 FROM node
 
-COPY src src
+RUN mkdir -p /opt/app
+WORKDIR /opt/app
 
-COPY package.json package.json
+
+COPY src /opt/app/src
+
+COPY package.json /opt/app/package.json
 
 RUN npm install
 

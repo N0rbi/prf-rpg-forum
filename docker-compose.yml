@@ -16,6 +16,7 @@ services:
       - db
     volumes:
       - ./utils/:/utils/
+      - ./api/src:/opt/app/src
   web:
     build: ./forum-roleplay-ui
     container_name: "angular"
