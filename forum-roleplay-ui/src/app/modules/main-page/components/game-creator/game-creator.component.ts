@@ -55,8 +55,8 @@ export class GameCreatorComponent implements OnInit {
   }
 
   private updateForumStore() {
-    this.forumService.fetchAllForum().subscribe(forums => {
-      this.forumService.updateForumStore(forums);
+    this.forumService.fetchAllForum().subscribe((forums: {message: string, forum: any[]}) => {
+      this.forumService.updateForumStore(forums.forum);
     });
   }
 

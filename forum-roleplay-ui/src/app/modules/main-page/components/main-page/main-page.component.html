@@ -3,7 +3,7 @@
   <button mat-button (click)="openNewGameDialog()">Új játék létrehozása</button>
 </div>
 
-<div class="forum-container">
+<div class="forum-container" *ngIf="forums && forums.length > 0">
     <mat-card *ngFor="let forum of forums" class="forum-card">
         <mat-card-header>
           <mat-card-title>Készítette: {{forum.creator.username}}</mat-card-title>
@@ -14,7 +14,20 @@
           <p>Leírás: {{forum.theme}}</p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button (click)="joinGame(forum)">Csatlakozás a játékhoz</button>
+          <button mat-button 
+            *ngIf="currentUser._id !== forum.creator._id" 
+            (click)="joinGameAsPlayer(forum)">
+              Csatlakozás, mint játékos
+            </button>
+          <button mat-button
+            *ngIf="currentUser._id === forum.creator._id" 
+            (click)="joinGameAsGameMaster(forum)">
+              Csatlakozás, mint játékmester
+          </button>
         </mat-card-actions>
     </mat-card>
+</div>
+
+<div *ngIf="forums && forums.length === 0">
+  <div>Jelenleg nincs elérhető játék</div>
 </div>

@@ -35,8 +35,8 @@ export class MainPageComponent implements OnInit {
       this.currentUser = currentUser;
     });
 
-    this.forumService.fetchAllForum().subscribe(forums => {
-      this.forums = forums;
+    this.forumService.fetchAllForum().subscribe((forums: {message: string, forum: any[]}) => {
+      this.forums = forums.forum;
     });
 
     this.forumService.forumStore.subscribe(forums => {
@@ -50,11 +50,7 @@ export class MainPageComponent implements OnInit {
     this.dialog.open(GameCreatorComponent, dialogConfig);
   }
 
-  joinGame(game) {
-    if (game.creator._id === this.currentUser._id) {
-      this.toastr.info('Nem lehetsz játékos, mert te hoztad létre a szobát!')
-      return;
-    }
+  joinGameAsPlayer(game) {
     game.players.forEach(player => {
       if (player._id === this.currentUser._id) {
         this.toastr.info('Már tagja vagy a szobának!');
@@ -62,6 +58,10 @@ export class MainPageComponent implements OnInit {
       }
     });
     this.openCharacterSelector(game);
+  }
+
+  joinGameAsGameMaster(game) {
+    // this.forumService.joinGame()
   }
 
   private openCharacterSelector(game) {

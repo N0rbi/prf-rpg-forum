@@ -40,7 +40,7 @@ export class ForumService {
         return this.http.post(`${environment.backendUrl}/forum/createForum`, forum, this.httpOptions)
     }
 
-    public playerJoin(playerData): Observable<any> {
+    public joinGame(playerData): Observable<any> {
         return this.http.put(`${environment.backendUrl}/forum/playerJoin`, playerData, this.httpOptions);
     }
 

@@ -41,30 +41,24 @@ export class CharacterSelectorComponent implements OnInit {
     this.router.navigate(['/character-creator']);
   }
 
-  public selectCharacter(character) {
+  public selectCharacter(selectedCharacter) {
     const playerData = {
-      forumID: this.gameID,
+      forum_id: this.gameID,
       user: this.currentUser,
-      characterName: character.name,
-      characterRace: character.race,
-      characterType: character.type,
-      characterCommentNumber: character.commentNum,
-      characterHp: character.hp,
-      characterAttack: character.attack,
-      characterLevel: character.level
+      character: selectedCharacter
     };
-    this.forumService.playerJoin(playerData).subscribe(res => {
-      this.toastr.success('Sikeresen csatlakoztál a játékhoz!');
+    this.forumService.joinGame(playerData).subscribe(res => {
+      this.toastr.success(res.message);
       this.updateForumStore();
       this.dialogRef.close();
     }, err => {
-      this.toastr.error('Nem sikerült a csatlakozás');
+      this.toastr.error(err.error.errors[0], err.error.message);
     });
   }
 
   private updateForumStore() {
-    this.forumService.fetchAllForum().subscribe(forums => {
-      this.forumService.updateForumStore(forums);
+    this.forumService.fetchAllForum().subscribe((forums: {message: string, forum: any[]}) => {
+      this.forumService.updateForumStore(forums.forum);
     });
   }
 
