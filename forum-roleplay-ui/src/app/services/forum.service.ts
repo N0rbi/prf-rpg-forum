@@ -60,4 +60,12 @@ export class ForumService {
         return this.http.put(`${environment.backendUrl}/forum/${forumID}/${postID}`, message, this.httpOptions);
     }
 
+    public deletePostMessage(forumID, postID) {
+        return this.http.delete(`${environment.backendUrl}/forum/${forumID}/${postID}`, this.httpOptions);
+    }
+
+    public deleteThreadMessage(forumID, postID, threadID) {
+        return this.http.delete(`${environment.backendUrl}/forum/${forumID}/${postID}/${threadID}`, this.httpOptions);
+    }
+
 }

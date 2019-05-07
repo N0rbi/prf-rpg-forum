@@ -59,6 +59,18 @@ export class ForumComponent implements OnInit {
     });
   }
 
+  deleteThreadMessage(postID, threadID) {
+    this.forumService.deleteThreadMessage(this.forumID, postID, threadID).subscribe(() => {
+      this.updateForum();
+    })
+  }
+
+  deletePostMessage(postID) {
+    this.forumService.deletePostMessage(this.forumID, postID).subscribe(() => {
+      this.updateForum();
+    });
+  }
+
   private updateForum() {
     this.forumService.fetchForum(this.forumID).subscribe(postList => {
       this.postList = postList;

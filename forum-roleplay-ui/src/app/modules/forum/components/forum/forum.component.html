@@ -9,26 +9,28 @@
             <mat-expansion-panel-header>
               <mat-panel-title *ngIf="post.postCreator">{{post.postCreator.username}}</mat-panel-title>
               <mat-panel-description>{{post.content}}</mat-panel-description>
-              <mat-panel-description style="float: right">{{post.time | date: 'yyyy-MM-dd'}}</mat-panel-description>
+              <span style="float: right">{{post.time | date: 'yyyy-MM-dd'}}</span>
+              <span><i class="material-icons" (click)="deletePostMessage(post._id)">delete</i></span>
             </mat-expansion-panel-header>
               <div *ngIf="post.thread && post.thread.length > 0">
                 <div *ngFor="let thread of post.thread">
                   <mat-panel-title>{{thread.messageCreator.username}}</mat-panel-title>
                   <mat-panel-description>{{thread.message}}</mat-panel-description>
-                  <mat-panel-description>{{thread.time | date: 'yyyy-MM-dd'}}</mat-panel-description>
+                  <span><i class="material-icons" (click)="deleteThreadMessage(post._id, thread._id)">delete</i></span>
+                  <span>{{thread.time | date: 'yyyy-MM-dd'}}</span>
                 </div>
+              </div>
+              <div>
+                  <mat-form-field (keydown)="sendThreadMessage($event, post._id)" [style.fontSize]="12" style="width: 100%">
+                    <mat-label>Üzenet írása</mat-label>
+                    <textarea matInput
+                              cdkTextareaAutosize
+                              [(ngModel)]="threadMessage.message"
+                              #autosize="cdkTextareaAutosize"
+                              cdkAutosizeMinRows="1"
+                              cdkAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
                 </div>
-                <div>
-                    <mat-form-field (keydown)="sendThreadMessage($event, post._id)" [style.fontSize]="12" style="width: 100%">
-                      <mat-label>Üzenet írása</mat-label>
-                      <textarea matInput
-                                cdkTextareaAutosize
-                                [(ngModel)]="threadMessage.message"
-                                #autosize="cdkTextareaAutosize"
-                                cdkAutosizeMinRows="1"
-                                cdkAutosizeMaxRows="5"></textarea>
-                    </mat-form-field>
-                  </div>
           </mat-expansion-panel>
         </mat-accordion>
   </div>
