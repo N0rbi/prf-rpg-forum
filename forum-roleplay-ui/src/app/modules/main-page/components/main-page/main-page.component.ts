@@ -60,8 +60,19 @@ export class MainPageComponent implements OnInit {
     this.openCharacterSelector(game);
   }
 
-  joinGameAsGameMaster(game) {
-    // this.forumService.joinGame()
+  joinGame(game) {
+    this.router.navigate(['/forum/', game._id]);
+  }
+
+  canJoinInGame(game): boolean {
+    const player = game.players.find(player => player.user._id === this.currentUser._id);
+    if (player) {
+      return true;
+    }
+    if (this.currentUser._id === game.creator._id) {
+      return true;
+    }
+    return false;
   }
 
   private openCharacterSelector(game) {

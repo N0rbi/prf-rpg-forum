@@ -1,0 +1,47 @@
+<app-header></app-header>
+<div *ngIf="postList && postList.forum">Téma: {{postList.forum.theme}}</div>
+
+<div style="padding: 10px; margin: 15px;" *ngIf="postList && postList.forum && postList.forum.post && postList.forum.post.length > 0">
+  <div *ngFor="let post of postList.forum.post">
+      <mat-accordion>
+          <mat-expansion-panel (opened)="panelOpenState = true" 
+                                (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+              <mat-panel-title *ngIf="post.postCreator">{{post.postCreator.username}}</mat-panel-title>
+              <mat-panel-description>{{post.content}}</mat-panel-description>
+              <mat-panel-description style="float: right">{{post.time | date: 'yyyy-MM-dd'}}</mat-panel-description>
+            </mat-expansion-panel-header>
+              <div *ngIf="post.thread && post.thread.length > 0">
+                <div *ngFor="let thread of post.thread">
+                  <mat-panel-title>{{thread.messageCreator.username}}</mat-panel-title>
+                  <mat-panel-description>{{thread.message}}</mat-panel-description>
+                  <mat-panel-description>{{thread.time | date: 'yyyy-MM-dd'}}</mat-panel-description>
+                </div>
+                </div>
+                <div>
+                    <mat-form-field (keydown)="sendThreadMessage($event, post._id)" [style.fontSize]="12" style="width: 100%">
+                      <mat-label>Üzenet írása</mat-label>
+                      <textarea matInput
+                                cdkTextareaAutosize
+                                [(ngModel)]="threadMessage.message"
+                                #autosize="cdkTextareaAutosize"
+                                cdkAutosizeMinRows="1"
+                                cdkAutosizeMaxRows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+  </div>
+</div>
+
+<div>
+  <mat-form-field (keydown)="sendPostMessage($event)" [style.fontSize]="12" style="width: 100%">
+    <mat-label>Üzenet írása</mat-label>
+    <textarea matInput
+              cdkTextareaAutosize
+              [(ngModel)]="message.content"
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"></textarea>
+  </mat-form-field>
+</div>
