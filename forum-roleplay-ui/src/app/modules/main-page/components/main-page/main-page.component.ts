@@ -35,7 +35,7 @@ export class MainPageComponent implements OnInit {
       this.currentUser = currentUser;
     });
 
-    this.forumService.fetchAllForum().subscribe((forums: {message: string, forum: any[]}) => {
+    this.forumService.fetchAllForum().subscribe((forums: any) => {
       this.forums = forums.forum;
     });
 

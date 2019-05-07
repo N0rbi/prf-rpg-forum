@@ -24,6 +24,7 @@ var forumSchema = new mongoose.Schema({
     players: [{
         user: { type: userModel, require: true },
         character: {
+            _id: {type: String, require: true, lowercase: true},
             name: {type: String, required: true, lowercase: true},
             race: {type: String, required: true, lowercase: true},
             type: {type: String, required: true, lowercase: true},

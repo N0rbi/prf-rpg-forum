@@ -40,8 +40,8 @@ export class ForumService {
     }
 
     public fetchForum(forumID: string): Observable<any> {
-        // return this.http.get(`${environment.backendUrl}/forum/fetchForum?forumID=${forumID}`, this.httpOptions);
-        return this.http.get(`${environment.backendUrl}/forum/${forumID}`, this.httpOptions);
+        return this.http.get(`${environment.backendUrl}/forum/fetchForum?forumID=${forumID}`, this.httpOptions);
+        // return this.http.get(`${environment.backendUrl}/forum/${forumID}`, this.httpOptions);
     }
 
     public createForum(forum: Forum): Observable<any> {

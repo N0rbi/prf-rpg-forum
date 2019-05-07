@@ -50,9 +50,9 @@ export class ForumComponent implements OnInit {
       return;
     }
     this.forumService.sendMessage(this.forumID, this.message).subscribe(() => {
+      this.updateCharacter();
       this.updateForum();
       this.message = {content: '', challange: {}};
-      this.updateCharacter();
     });
   }
 
@@ -81,7 +81,7 @@ export class ForumComponent implements OnInit {
 
   getCharacterName(creatorID): string {
     let characterName = 'Mesélő';
-    this.postList.forum.players.forEach((player: any) => {
+    this.postList.players.forEach((player: any) => {
       if (player.user._id === creatorID) {
         characterName = player.character.name;
       }
@@ -90,24 +90,30 @@ export class ForumComponent implements OnInit {
   }
 
   private updateCharacter() {
-    // let updatedCharacter: any = {};
-    // let characterID = '';
-    // this.postList.forum.players.forEach((player: any) => {
-    //   if (player.user._id === postCreatorID) {
-    //     player.character.commentNum += 1;
-    //     if (player.character.commentNum % 3 === 0) {
-    //       player.character.level += 1;
-    //       player.character.hp *= 1.1;
-    //       player.character.attack *= 1.1;
-    //     }
-    //     updatedCharacter = player.character;
-    //   }
-    // });
-    // this.currentUser.characters.forEach((character: any) => {
-    //   if (character.name === updatedCharacter.name) {
-    //     characterID = character._id;
-    //   }
-    // });
+    let updatedCharacter: any = {};
+    this.postList.players.forEach((player: any) => {
+      if (player.user._id === this.currentUser._id) {
+        player.character.commentNum += 1;
+        player.character.level += 1;
+        player.character.hp *= 1.1;
+        player.character.attack *= 1.1;
+        updatedCharacter = player.character;
+        this.characterService.updateCharacter({
+          character_id: updatedCharacter._id,
+          character: {
+            name: updatedCharacter.name,
+            race: updatedCharacter.race,
+            type: updatedCharacter.type,
+            commentNum: updatedCharacter.commentNum,
+            hp: updatedCharacter.hp,
+            attack: updatedCharacter.attack,
+            level: updatedCharacter.level
+          }
+        }).subscribe(() => {
+          console.log('update');
+        });
+      }
+    });
   }
 
   private updateForum() {

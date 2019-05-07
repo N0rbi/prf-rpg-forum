@@ -47,6 +47,7 @@ export class CharacterSelectorComponent implements OnInit {
       user: this.currentUser,
       character: selectedCharacter
     };
+    console.log('playerData', playerData);
     this.forumService.joinGame(playerData).subscribe(res => {
       this.toastr.success(res.message);
       this.updateForumStore();
@@ -57,8 +58,8 @@ export class CharacterSelectorComponent implements OnInit {
   }
 
   private updateForumStore() {
-    this.forumService.fetchAllForum().subscribe((forums: {message: string, forum: any[]}) => {
-      this.forumService.updateForumStore(forums.forum);
+    this.forumService.fetchAllForum().subscribe((forums: any) => {
+      this.forumService.updateForumStore(forums);
     });
   }
 

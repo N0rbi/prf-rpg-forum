@@ -1,8 +1,8 @@
 <app-header></app-header>
-<div *ngIf="postList && postList.forum">Téma: {{postList.forum.theme}}</div>
+<div *ngIf="postList">Téma: {{postList.theme}}</div>
 
-<div style="padding: 10px; margin: 15px;" *ngIf="postList && postList.forum && postList.forum.post && postList.forum.post.length > 0">
-  <div *ngFor="let post of postList.forum.post">
+<div style="padding: 10px; margin: 15px;" *ngIf="postList && postList.post && postList.post.length > 0">
+  <div *ngFor="let post of postList.post">
       <mat-accordion>
           <mat-expansion-panel (opened)="panelOpenState = true" 
                                 (closed)="panelOpenState = false">
