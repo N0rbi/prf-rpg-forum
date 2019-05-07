@@ -7,7 +7,7 @@
           <mat-expansion-panel (opened)="panelOpenState = true" 
                                 (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
-              <mat-panel-title *ngIf="post.postCreator">{{post.postCreator.username}}</mat-panel-title>
+              <mat-panel-title *ngIf="post.postCreator">{{getCharacterName(post.postCreator._id)}}  ({{post.postCreator.username}})</mat-panel-title>
               <mat-panel-description>{{post.content}}</mat-panel-description>
               <span style="float: right">{{post.time | date: 'yyyy-MM-dd'}}</span>
               <span><i class="material-icons" (click)="deletePostMessage(post._id)">delete</i></span>

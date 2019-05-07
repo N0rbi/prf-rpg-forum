@@ -30,4 +30,8 @@ export class CharacterService {
   deleteCharacter(characterID: string) {
     return this.http.delete(`${environment.backendUrl}/character?character_id=${characterID}`, {withCredentials: true});
   }
+
+  updateCharacter(character) {
+    return this.http.post(`${environment.backendUrl}/character`, character, {withCredentials: true});
+  }
 }

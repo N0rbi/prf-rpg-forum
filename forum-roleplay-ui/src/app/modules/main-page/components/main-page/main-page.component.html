@@ -15,12 +15,13 @@
         </mat-card-content>
         <mat-card-actions>
           <button mat-button 
-            *ngIf="currentUser._id !== forum.creator._id" 
+            *ngIf="currentUser && currentUser._id !== forum.creator._id" 
             (click)="joinGameAsPlayer(forum)">
               Karakter kiválasztása
             </button>
           <button mat-button
             *ngIf="canJoinInGame(forum)"
+            [disabled]="forum.playerNumber - forum.players.length !== 0"
             (click)="joinGame(forum)">
             Belépés a játékba!
           </button>
