@@ -74,13 +74,13 @@ router.put('/playerJoin', function(req, res) {
         {$project: {creator: 1, players: 1, playerNumber: 1, minLevel: 1, isActive: 1}}
     ]).exec(
      function(err, criteria) {
-        if (err) {
+        if (err || criteria.length === 0) {
             return res.status(500).send({message: "Nem sikerült a kritériumok ellenőrzése.", err: err});
         }
         //check min level & game creator can also play (shouldnt be able to) + player number
-
+         console.log(criteria);
         criteria = criteria[0];
-        var playerIds = criteria.players.map(player=>player.user._id.toString());
+        var playerIds = (criteria.players).map(player=>player.user._id.toString());
         var isOwner = criteria.creator._id === req.user._id;
         var isPlayerExperienced = criteria.minLevel <= req.body.character.level;
         var isPlayerAlreadyInLobby = playerIds.indexOf(req.user._id) !== -1;
@@ -95,7 +95,7 @@ router.put('/playerJoin', function(req, res) {
          {isError: isActive, message: "A játék már véget ért"}
         ];
         var errorList = errorMessages.filter(errorObj => errorObj.isError).map(errorObj=>errorObj.message);
-        if (errorList.length != 0) {
+        if (errorList.length !== 0) {
             return res.status(403).send({message: "Sikertelen csatlakozás", "errors": errorList});
         }
         forumModel.update(
