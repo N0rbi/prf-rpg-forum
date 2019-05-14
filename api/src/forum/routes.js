@@ -55,7 +55,7 @@ router.get('/fetchAllForums', function(req, res) {
         })
     } else {
         forumModel.aggregate([
-            {$project: {_id: 1, theme: 1, creator: 1, players: 1, playerNumber: 1, minLevel: 1}}
+            {$project: {_id: 1, theme: 1, creator: 1, players: 1, playerNumber: 1, minLevel: 1, isActive: 1}}
         ],
          function(err, forums) {
             if (err) return res.status(500).send({message: "Nem sikerült fórumokat betölteni", err: err})
@@ -71,7 +71,7 @@ router.put('/playerJoin', function(req, res) {
     }
     forumModel.aggregate([
         {$match: {_id: mongoose.Types.ObjectId(req.body.forum_id)}},
-        {$project: {creator: 1, players: 1, playerNumber: 1, minLevel: 1}}
+        {$project: {creator: 1, players: 1, playerNumber: 1, minLevel: 1, isActive: 1}}
     ]).exec(
      function(err, criteria) {
         if (err) {
@@ -81,16 +81,18 @@ router.put('/playerJoin', function(req, res) {
 
         criteria = criteria[0];
         var playerIds = criteria.players.map(player=>player.user._id.toString());
-        var isOwner = criteria.creator._id == req.user._id;
+        var isOwner = criteria.creator._id === req.user._id;
         var isPlayerExperienced = criteria.minLevel <= req.body.character.level;
-        var isPlayerAlreadyInLobby = playerIds.indexOf(req.user._id) != -1;
-        var isLobbyFull = playerIds.length == criteria.playerNumber;
+        var isPlayerAlreadyInLobby = playerIds.indexOf(req.user._id) !== -1;
+        var isLobbyFull = playerIds.length === criteria.playerNumber;
+        var isActive = criteria.isActive;
         var errorMessages =
         [
          {isError: isOwner, message: "Játékmesterek nem lehetnek játékosok."},
          {isError: !isPlayerExperienced, message: "A karakter szintje nem éri el a minimumot."},
          {isError: isPlayerAlreadyInLobby, message: "Már a játék része vagy."},
-         {isError: isLobbyFull, message: "Több játékos nem csatlakozhat a játékhoz."}
+         {isError: isLobbyFull, message: "Több játékos nem csatlakozhat a játékhoz."},
+         {isError: isActive, message: "A játék már véget ért"}
         ];
         var errorList = errorMessages.filter(errorObj => errorObj.isError).map(errorObj=>errorObj.message);
         if (errorList.length != 0) {
@@ -111,6 +113,19 @@ router.put('/playerJoin', function(req, res) {
         )
     });
 
+});
+
+router.post("/endGame/:forum_id", function (req, res) {
+    forumModel.findOne({_id: mongoose.Types.ObjectId(req.params.forum_id)}, function (err, forum) {
+        if (!forum || err) return res.status(500).send({message: "forum not found", error: err});
+        if (forum.creator._id.toString() !== req.user._id.toString()) return res.status(402).send({message: "Nincs jogosultságod a művelethez"});
+
+        forumModel.updateOne({_id: mongoose.Types.ObjectId(req.params.forum_id)}, {isActive: false}, function (err, forum) {
+            if (!forum || err) return res.status(500).send({message: "user not found", error: err});
+            return res.status(200).send({message: "Fórum archiválva"});
+        });
+
+    })
 });
 
 router.post("/takeChallenge/:forum_id/:post_id", function(req, res) {

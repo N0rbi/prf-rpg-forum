@@ -34,7 +34,8 @@ var forumSchema = new mongoose.Schema({
         }
      }],
     playerNumber: {type: Number, required: true, default: 0},
-    minLevel: {type: Number, required: true, default: 0}
+    minLevel: {type: Number, required: true, default: 0},
+    isActive: {type: Boolean, required: true, default: true}
 }, {collection: 'forum'});
 
 forumSchema.pre('save', function(next) {
