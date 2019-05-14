@@ -7,12 +7,12 @@ var forumSchema = new mongoose.Schema({
     theme: {type: String, required: true},
     creator: {type: userModel, required: true},
     post: [{
-        postCreator: { type: userModel, require: true },
-        content: { type: String, require: true },
+        postCreator: { type: userModel, required: true },
+        content: { type: String, required: true },
         challenge: {
-            hp: {type: Number, required: true, min: 0},
-            attack: {type: Number, required: true, min: 0},
-            usersPassed: [{type: userModel}]
+            hp: {type: Number, min: 0},
+            attack: {type: Number, min: 0},
+            usersPassed: [{type: userModel}],
         },
         thread: [{
             messageCreator: {type: userModel, require: true},

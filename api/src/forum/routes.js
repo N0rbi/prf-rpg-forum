@@ -10,10 +10,15 @@ function createForum(req, res) {
         return res.status(401).send({message: "Unauthorized access"})
     }
 
+    const welcomePost = {
+        postCreator: req.user,
+        content: "Welcome to my game, let's get started"
+    };
+
     var forum = new forumModel({
         theme: req.body.theme,
         creator: req.user,
-        post: [],
+        post: [welcomePost],
         players: [],
         playerNumber: req.body.playerNumber,
         minLevel: req.body.minLevel
@@ -27,7 +32,7 @@ function createForum(req, res) {
 }
 
 router.put("/", createForum);
-//DEPRICATED: "/createForum"
+//DEPRECATED: "/createForum"
 router.post('/createForum', createForum);
 
 router.get('/fetchForum', function(req, res) {
@@ -57,7 +62,7 @@ router.get('/fetchAllForums', function(req, res) {
             return res.status(200).send({message: "Fórumok betöltve", forum: forums})
         })
     }
-})
+});
 
 
 router.put('/playerJoin', function(req, res) {
@@ -70,7 +75,6 @@ router.put('/playerJoin', function(req, res) {
     ]).exec(
      function(err, criteria) {
         if (err) {
-            failed = true;
             return res.status(500).send({message: "Nem sikerült a kritériumok ellenőrzése.", err: err});
         }
         //check min level & game creator can also play (shouldnt be able to) + player number
@@ -126,7 +130,7 @@ router.post("/takeChallenge/:forum_id/:post_id", function(req, res) {
         forumModel.aggregate(
             [
             {$match: {_id: mongoose.Types.ObjectId(req.params.forum_id)}},
-            {$unwind: "post"},
+            {$unwind: "$post"},
             {$match: {"post._id": mongoose.Types.ObjectId(req.params.post_id)}},
             {$project: {character: "$players.character"}}
             ],
@@ -187,7 +191,7 @@ router.route("/:forum_id")
         function(err, forum) {
            if (err) return res.status(500).send({message: "Nem sikerült fórumot betölteni", err: err})
            var playerIds = forum[0].players.map(player=>player.user._id.toString());
-           if (playerIds.indexOf(req.user._id) != -1) {
+           if (playerIds.indexOf(req.user._id) != -1 || forum[0].creator._id == req.user._id) {
                return res.status(200).send({message: "Fórum betöltve", forum: forum[0]});
            }
            // the user is not part of the lobby
@@ -200,7 +204,6 @@ router.route("/:forum_id")
         }
         //if he is UP_TO_DATE with forum, aka he has passed all previous challenges
         var userLatestVisible = getFirstNonCompletedChallengeTimestamp(req.params.forum_id, req.user._id);
-        var lastEntryDate;
             forumModel.aggregate(
                 [
                     {$match: {_id: mongoose.Types.ObjectId(req.params.forum_id)}},
@@ -210,26 +213,49 @@ router.route("/:forum_id")
                     {$sort: {"time": -1}},
                     {$limit: 1}
                 ]
-            , function(err, result) {
-                lastEntryDate = result;
+            , function(err, lastEntryDate) {
+                if (Date(userLatestVisible) < Date(lastEntryDate)) {
+                    return res.status(403).send({message: "Ahhoz hogy írhass a fórumra előbb teljesítened kell a kihívásokat"});
+                }
+
+                    forumModel.aggregate(
+                        [
+                            {$match: {_id: mongoose.Types.ObjectId(req.params.forum_id)}},
+                            {$unwind: "$post"},
+                            {$match: {"post.time":
+                                        {$lte: getFirstNonCompletedChallengeTimestamp(req.params.forum_id, req.user._id)}}},
+                            {"$group":
+                                    {
+                                        "_id": "$_id",
+                                        "theme": { "$first": "$theme" },
+                                        "creator": { "$first": "$creator" },
+                                        "players": { "$first": "$players" },
+                                        "playerNumber": { "$first": "$playerNumber" },
+                                        "minLevel": {"$first": "$minLevel"},
+                                        "post": { "$push": "$post" }
+                                    }
+                            }
+                        ],
+                        function(err, forum) {
+                            if (!forum || forum.length || forum[0].creator._id != req.user._id && req.body.challenge) {
+                                return res.status(500).send({message: "Nem sikerült a posztot létrehozni", err: err ? err : "Játékosok nem hozhatnak létre kihívásokat"});
+                            }
+                            forumModel.update(
+                                {_id: req.params.forum_id},
+                                {
+                                    $push: {post: {
+                                            postCreator: req.user,
+                                            content: req.body.content,
+                                            challenge: req.body.challenge
+                                        }}
+                                }, (forum) => {
+                                    return res.status(200).send({message: "Poszt létrehozva", forum: forum})
+                                }, err => {
+                                    return res.status(500).send({message: "Nem sikerült a posztot létrehozni", err: err})
+                                }
+                            )
+                        });
             });
-        if (Date(userLatestVisible) < Date(lastEntryDate)) {
-            return res.status(403).send({message: "Ahhoz hogy írhass a fórumra előbb teljesítened kell a kihívásokat"});
-        }
-        forumModel.update(
-            {_id: req.params.forum_id},
-            {
-                $push: {post: {
-                    postCreator: req.user,
-                    content: req.body.content,
-                    challenge: req.body.challenge
-                }}
-            }, (forum) => {
-                return res.status(200).send({message: "Poszt létrehozva", forum: forum})
-            }, err => {
-                return res.status(500).send({message: "Nem sikerült a posztot létrehozni", err: err})
-            }
-        )
     })
     .delete(function(req, res) {
         if (!req.isAuthenticated()) {
