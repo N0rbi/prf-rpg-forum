@@ -28,7 +28,7 @@ mongoose.connect(dbPath);
 
 mongoose.connection.on('connected', ()=> {
   console.log('db connected');
-})
+});
 
 mongoose.connection.on('error', (err) => {
   console.log('db connection error: ' + err);
@@ -64,6 +64,6 @@ app.use("/character", require("./character/routes"));
 app.use("/forum", require("./forum/routes"));
 
 
-app.listen(8080, () => {
+app.listen(8081, () => {
     console.log('the server is running');
 });

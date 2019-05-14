@@ -10,5 +10,5 @@ COPY package.json /opt/app/package.json
 
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 8081
 ENTRYPOINT ["npm", "start"]
