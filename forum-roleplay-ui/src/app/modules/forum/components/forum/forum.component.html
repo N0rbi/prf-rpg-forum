@@ -16,7 +16,7 @@
                 <div *ngFor="let thread of post.thread">
                   <mat-panel-title>{{thread.messageCreator.username}}</mat-panel-title>
                   <mat-panel-description>{{thread.message}}</mat-panel-description>
-                  <span><i class="material-icons" (click)="deleteThreadMessage(post._id, thread._id)">delete</i></span>
+                  <span *ngIf="currentUser.username === thread.messageCreator.username"><i class="material-icons" (click)="deleteThreadMessage(post._id, thread._id)">delete</i></span>
                   <span>{{thread.time | date: 'yyyy-MM-dd'}}</span>
                 </div>
               </div>
