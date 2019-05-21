@@ -31,6 +31,14 @@ export class ForumService {
         this.forumSource.next(currentForum);
     }
 
+    public takeChallenge(forumID, postID, throwValue) {
+        return this.http.post(`${environment.backendUrl}/forum/takeChallenge/${forumID}/${postID}`, {throw: throwValue}, this.httpOptions);
+    }
+
+    public endGame(forumID) {
+        return this.http.post(`${environment.backendUrl}/forum/endGame/${forumID}`, {}, this.httpOptions);
+    }
+
     public updatePostList(currentPostList): void {
         this.forumSource.next(currentPostList);
     }

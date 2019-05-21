@@ -5,6 +5,8 @@ import { ForumService } from 'src/app/services/forum.service';
 import { ActivatedRoute } from '@angular/router';
 import { CharacterService } from 'src/app/services/character.service';
 import { UserService } from 'src/app/services/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forum',
@@ -12,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./forum.component.less']
 })
 export class ForumComponent implements OnInit {
+  challenge = {hp: 0, attack: 0};
   message = {
     content: '',
     challenge: null
@@ -24,11 +27,13 @@ export class ForumComponent implements OnInit {
   postList: any;
   panelOpenState = false;
   currentUser;
-  sub;
+  currentCharacter;
+  diceRoll: number;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   constructor(private ngZone: NgZone, private forumService: ForumService, private route: ActivatedRoute,
-              private characterService: CharacterService, private userService: UserService) {
+              private characterService: CharacterService, private userService: UserService, private toastr: ToastrService,
+              private router: Router) {
     this.forumID = this.route.snapshot.params.forum_id;
   }
 
@@ -48,9 +53,35 @@ export class ForumComponent implements OnInit {
       .subscribe(() => this.autosize.resizeToFitContent(true));
   }
 
+  getcurrentCharacter() {
+    this.postList.players.forEach((player: any) => {
+      if (player.user.username === this.currentUser.username) {
+        this.currentCharacter =  player.character;
+      }
+    });
+  }
+
+  public checkChallenge() {
+    this.getcurrentCharacter();
+    console.log('currentCharacter', this.currentCharacter);
+    const lastPost = this.postList.post[this.postList.post.length - 1];
+    this.diceRoll = Math.floor(Math.random() * 6) + 1;
+    this.diceRoll = 6.0;
+    this.forumService.takeChallenge(this.forumID, lastPost._id, this.diceRoll).subscribe((res: any) => {
+      this.toastr.info(res.message);
+      if (res.message === 'A karaktered elesett.') {
+          this.router.navigate(['/main']);
+      }
+    });
+  }
+
   sendPostMessage(event) {
     if (event.keyCode !== 13) {
       return;
+    }
+    if (this.challenge.attack > 0 && this.challenge.hp > 0) {
+      this.message.challenge = this.challenge;
+      this.challenge = {hp: 0, attack: 0};
     }
     console.log(this.message);
     this.forumService.sendMessage(this.forumID, this.message).subscribe(() => {
@@ -74,6 +105,12 @@ export class ForumComponent implements OnInit {
     this.forumService.deleteThreadMessage(this.forumID, postID, threadID).subscribe(() => {
       this.updateForum();
     })
+  }
+
+  endGame() {
+    this.forumService.endGame(this.forumID).subscribe(() => {
+      this.router.navigate(['/main']);
+    });
   }
 
   deletePostMessage(postID) {

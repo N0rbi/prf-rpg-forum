@@ -169,7 +169,7 @@ router.post("/takeChallenge/:forum_id/:post_id", function(req, res) {
                        {
                            $set: {"players.$.character.hp": 0, "players.$.character.attack": 0}
                        }, (forum) => {
-                           return res.status(200).send({message: "A karaktered elesett.", forum: forum})
+                           return res.status(200).send({message: "A karaktered elesett.", end: true ,forum: forum})
                        }, err => {
                            return res.status(500).send({message: "Szerverhiba.", err: err})
                        }

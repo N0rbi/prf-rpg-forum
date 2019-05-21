@@ -22,7 +22,7 @@
               </div>
               <div>
                   <mat-form-field (keydown)="sendThreadMessage($event, post._id)" [style.fontSize]="12" style="width: 100%">
-                    <mat-label>Üzenet írása</mat-label>
+                    <mat-label>Komment írása</mat-label>
                     <textarea matInput
                               cdkTextareaAutosize
                               [(ngModel)]="threadMessage.message"
@@ -36,8 +36,15 @@
   </div>
 </div>
 
-<div>
-  <mat-form-field (keydown)="sendPostMessage($event)" [style.fontSize]="12" style="width: 100%">
+<div *ngIf="postList">
+    <button mat-raised-button color="primary"  *ngIf="currentUser._id !== postList.creator._id" (click)="checkChallenge()">Kihívás</button>
+    <span *ngIf="diceRoll">Kockadobás eredménye: {{diceRoll}}</span>
+    <button mat-raised-button color="primary"  *ngIf="currentUser._id === postList.creator._id" (click)="endGame()">Játék vége</button>
+</div>
+
+
+<div (keydown)="sendPostMessage($event)">
+  <mat-form-field [style.fontSize]="12" style="width: 100%">
     <mat-label>Üzenet írása</mat-label>
     <textarea matInput
               cdkTextareaAutosize
@@ -46,4 +53,17 @@
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="5"></textarea>
   </mat-form-field>
+  <div *ngIf="postList">
+      <div *ngIf="currentUser._id === postList.creator._id">
+          <div>
+              <mat-label>Kihívás létrehozása</mat-label>
+            </div>
+            <mat-form-field>
+                <input type="number" [(ngModel)]="challenge.hp" matInput placeholder="Életerő">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="number" [(ngModel)]="challenge.attack" matInput placeholder="Támadás">
+            </mat-form-field>
+      </div>
+  </div>
 </div>

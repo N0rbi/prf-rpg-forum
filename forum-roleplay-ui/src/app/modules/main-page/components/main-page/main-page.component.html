@@ -20,7 +20,7 @@
               </button>
             <button mat-button
               *ngIf="canJoinInGame(forum)"
-              [disabled]="forum.playerNumber - forum.players.length !== 0"
+              [disabled]="forum.playerNumber - forum.players.length !== 0 || !forum.isActive"
               (click)="joinGame(forum)">
               Belépés a játékba!
             </button>
