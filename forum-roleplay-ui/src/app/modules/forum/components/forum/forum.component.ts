@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, OnDestroy, DoCheck } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {take} from 'rxjs/operators';
 import { ForumService } from 'src/app/services/forum.service';
@@ -14,15 +14,17 @@ import { UserService } from 'src/app/services/user.service';
 export class ForumComponent implements OnInit {
   message = {
     content: '',
-    challange: {}
+    challenge: null
   };
   threadMessage = {
-    message: ''
+    message: '',
+    challenge: null
   };
   forumID: string;
   postList: any;
   panelOpenState = false;
   currentUser;
+  sub;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   constructor(private ngZone: NgZone, private forumService: ForumService, private route: ActivatedRoute,
@@ -50,10 +52,10 @@ export class ForumComponent implements OnInit {
     if (event.keyCode !== 13) {
       return;
     }
+    console.log(this.message);
     this.forumService.sendMessage(this.forumID, this.message).subscribe(() => {
-      this.updateCharacter();
       this.updateForum();
-      this.message = {content: '', challange: {}};
+      this.message = {content: '', challenge: null};
     });
   }
 
@@ -90,33 +92,33 @@ export class ForumComponent implements OnInit {
     return characterName;
   }
 
-  private updateCharacter() {
-    let updatedCharacter: any = {};
-    this.postList.players.forEach((player: any) => {
-      if (player.user._id === this.currentUser._id) {
-        player.character.commentNum += 1;
-        player.character.level += 1;
-        player.character.hp *= 1.1;
-        player.character.attack *= 1.1;
-        updatedCharacter = player.character;
-        console.log('character', player.character);
-        this.characterService.updateCharacter({
-          character_id: updatedCharacter._id,
-          character: {
-            name: updatedCharacter.name,
-            race: updatedCharacter.race,
-            type: updatedCharacter.type,
-            commentNum: updatedCharacter.commentNum,
-            hp: updatedCharacter.hp,
-            attack: updatedCharacter.attack,
-            level: updatedCharacter.level
-          }
-        }).subscribe(() => {
-          console.log('update');
-        });
-      }
-    });
-  }
+  // private updateCharacter() {
+  //   let updatedCharacter: any = {};
+  //   this.postList.players.forEach((player: any) => {
+  //     if (player.user._id === this.currentUser._id) {
+  //       player.character.commentNum += 1;
+  //       player.character.level += 1;
+  //       player.character.hp *= 1.1;
+  //       player.character.attack *= 1.1;
+  //       updatedCharacter = player.character;
+  //       console.log('character', player.character);
+  //       this.characterService.updateCharacter({
+  //         character_id: updatedCharacter._id,
+  //         character: {
+  //           name: updatedCharacter.name,
+  //           race: updatedCharacter.race,
+  //           type: updatedCharacter.type,
+  //           commentNum: updatedCharacter.commentNum,
+  //           hp: updatedCharacter.hp,
+  //           attack: updatedCharacter.attack,
+  //           level: updatedCharacter.level
+  //         }
+  //       }).subscribe(() => {
+  //         console.log('update');
+  //       });
+  //     }
+  //   });
+  // }
 
   private updateForum() {
     this.forumService.fetchForum(this.forumID).subscribe(postList => {

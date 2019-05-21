@@ -1,7 +1,7 @@
 <app-header></app-header>
 <div *ngIf="postList">Téma: {{postList.theme}}</div>
 
-<div style="padding: 10px; margin: 15px;" *ngIf="postList && postList.post && postList.post.length > 0">
+<div style="padding: 10px; margin: 15px;" *ngIf="postList && postList.post && postList.post.length > 0 && currentUser">
   <div *ngFor="let post of postList.post">
       <mat-accordion>
           <mat-expansion-panel (opened)="panelOpenState = true" 
@@ -10,7 +10,7 @@
               <mat-panel-title *ngIf="post.postCreator">{{getCharacterName(post.postCreator._id)}}  ({{post.postCreator.username}})</mat-panel-title>
               <mat-panel-description>{{post.content}}</mat-panel-description>
               <span style="float: right">{{post.time | date: 'yyyy-MM-dd'}}</span>
-              <span><i class="material-icons" (click)="deletePostMessage(post._id)">delete</i></span>
+              <span *ngIf="currentUser.username === post.postCreator.username"><i class="material-icons" (click)="deletePostMessage(post._id)">delete</i></span>
             </mat-expansion-panel-header>
               <div *ngIf="post.thread && post.thread.length > 0">
                 <div *ngFor="let thread of post.thread">

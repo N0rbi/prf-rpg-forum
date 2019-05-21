@@ -252,9 +252,10 @@ router.route("/:forum_id")
                             }
                         ],
                         function(err, forum) {
-                            if (!forum || forum.length || forum[0].creator._id != req.user._id && req.body.challenge) {
+                            if (!forum ||  forum.length === 0 || forum[0].creator._id != req.user._id && req.body.challenge) {
                                 return res.status(500).send({message: "Nem sikerült a posztot létrehozni", err: err ? err : "Játékosok nem hozhatnak létre kihívásokat"});
                             }
+
                             forumModel.update(
                                 {_id: req.params.forum_id},
                                 {

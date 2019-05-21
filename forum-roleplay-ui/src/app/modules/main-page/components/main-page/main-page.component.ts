@@ -68,6 +68,9 @@ export class MainPageComponent implements OnInit {
   }
 
   canJoinInGame(game): boolean {
+    if (!this.currentUser) {
+      return false;
+    }
     const player = game.players.find(player => player.user._id === this.currentUser._id);
     if (player) {
       return true;
