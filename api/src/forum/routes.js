@@ -151,7 +151,7 @@ router.post("/takeChallenge/:forum_id/:post_id", function(req, res) {
             ],
             function(err, challenge) {
                if (err) return res.status(500).send({message: "Szerverhiba.", err: err})
-               var challengeResult = req.body.throw > (character.hp / challenge.hp) + (character.attack / challenge.attack);
+               var challengeResult = req.body.throw > ((character.hp + character.attack) / (challenge.hp + challenge.attack )) * 5;
                if (challengeResult) {
                    forumModel.update(
                        {_id: req.params.forum_id, post: {$elemMatch: {"_id": req.params.post_id}}},
