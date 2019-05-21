@@ -33,6 +33,7 @@ export class ForumComponent implements OnInit {
   ngOnInit() {
     this.userService.fetchAuthenticatedUser().subscribe(currentUser => {
       this.currentUser = currentUser;
+      console.log('currentUser', currentUser);
     });
     this.updateForum();
     this.forumService.postListStore.subscribe(postList => {
@@ -98,6 +99,7 @@ export class ForumComponent implements OnInit {
         player.character.hp *= 1.1;
         player.character.attack *= 1.1;
         updatedCharacter = player.character;
+        console.log('character', player.character);
         this.characterService.updateCharacter({
           character_id: updatedCharacter._id,
           character: {

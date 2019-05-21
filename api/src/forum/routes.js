@@ -78,7 +78,7 @@ router.put('/playerJoin', function(req, res) {
             return res.status(500).send({message: "Nem sikerült a kritériumok ellenőrzése.", err: err});
         }
         //check min level & game creator can also play (shouldnt be able to) + player number
-         console.log(criteria);
+         console.log('criteria', criteria);
         criteria = criteria[0];
         var playerIds = (criteria.players).map(player=>player.user._id.toString());
         var isOwner = criteria.creator._id === req.user._id;
@@ -92,7 +92,7 @@ router.put('/playerJoin', function(req, res) {
          {isError: !isPlayerExperienced, message: "A karakter szintje nem éri el a minimumot."},
          {isError: isPlayerAlreadyInLobby, message: "Már a játék része vagy."},
          {isError: isLobbyFull, message: "Több játékos nem csatlakozhat a játékhoz."},
-         {isError: isActive, message: "A játék már véget ért"}
+         {isError: !isActive, message: "A játék már véget ért"}
         ];
         var errorList = errorMessages.filter(errorObj => errorObj.isError).map(errorObj=>errorObj.message);
         if (errorList.length !== 0) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { GameCreatorComponent } from '../game-creator/game-creator.component';
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.less']
+  styleUrls: ['./main-page.component.less'],
 })
 export class MainPageComponent implements OnInit {
 
@@ -41,6 +41,9 @@ export class MainPageComponent implements OnInit {
 
     this.forumService.forumStore.subscribe(forums => {
       this.forums = forums;
+      this.forumService.fetchAllForum().subscribe((forums2: any) => {
+        this.forums = forums2.forum;
+      });
     });
   }
 
