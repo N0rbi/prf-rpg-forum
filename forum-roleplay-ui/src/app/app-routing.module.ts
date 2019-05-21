@@ -6,6 +6,7 @@ import { MainPageComponent } from './modules/main-page/components/main-page/main
 import { AuthGuard } from './auth.guard';
 import { UserDetailsComponent } from './modules/main-page/components/user-details/user-details.component';
 import { CharacterCreatorComponent } from './modules/main-page/components/character-creator/character-creator.component';
+import { ForumComponent } from './modules/forum/components/forum/forum.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'main', component: MainPageComponent, canActivate: [AuthGuard] },
   { path: 'user-details', component: UserDetailsComponent, canActivate: [AuthGuard] },
   { path: 'character-creator', component: CharacterCreatorComponent, canActivate: [AuthGuard] },
+  { path: 'forum/:forum_id', component: ForumComponent, canActivate: [AuthGuard] },
   { path: '**', component: LoginComponent}
 ];
 

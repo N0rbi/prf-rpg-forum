@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './feature/materialize.module';
 import { LoginModule } from './modules/login/login.module';
 import { MainPageModule } from '../app/modules/main-page/main-page.module';
+import { ForumModule } from '../app/modules/forum/forum.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MainPageModule } from '../app/modules/main-page/main-page.module';
     FlexLayoutModule,
     HttpClientModule,
     LoginModule,
-    MainPageModule
+    MainPageModule,
+    ForumModule
   ],
   providers: [],
   bootstrap: [AppComponent]

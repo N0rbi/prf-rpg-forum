@@ -47,13 +47,13 @@ router.get('/fetchAllForums', function(req, res) {
     if (!req.isAuthenticated()) {
         return res.status(401).send({message: "Unauthorized access"});
     }
-    if (adminService.isAdmin(req.user.username)) {
-        forumModel.find({}, function(err, forums) {
-            return res.status(200).send(forums);
-        }, err => {
-            return res.status(500).send(err);
-        })
-    } else {
+    // if (adminService.isAdmin(req.user.username)) {
+    //     forumModel.find({}, function(err, forums) {
+    //         return res.status(200).send(forums);
+    //     }, err => {
+    //         return res.status(500).send(err);
+    //     })
+    // } else {
         forumModel.aggregate([
             {$project: {_id: 1, theme: 1, creator: 1, players: 1, playerNumber: 1, minLevel: 1, isActive: 1}}
         ],
@@ -61,7 +61,7 @@ router.get('/fetchAllForums', function(req, res) {
             if (err) return res.status(500).send({message: "Nem sikerült fórumokat betölteni", err: err})
             return res.status(200).send({message: "Fórumok betöltve", forum: forums})
         })
-    }
+    // }
 });
 
 

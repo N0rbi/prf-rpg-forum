@@ -13,6 +13,9 @@ export class ForumService {
     private forumSource: BehaviorSubject<any> = new BehaviorSubject(null);
     forumStore = this.forumSource.asObservable();
 
+    private postListSource: BehaviorSubject<any> = new BehaviorSubject(null);
+    postListStore = this.postListSource.asObservable();
+
     httpOptions = {};
 
     constructor(private http: HttpClient) {
@@ -24,8 +27,12 @@ export class ForumService {
         };
     }
 
-    public updateForumStore(newForum): void {
-        this.forumSource.next(newForum);
+    public updateForumStore(currentForum): void {
+        this.forumSource.next(currentForum);
+    }
+
+    public updatePostList(currentPostList): void {
+        this.forumSource.next(currentPostList);
     }
 
     public fetchAllForum(): Observable<any> {
@@ -34,14 +41,31 @@ export class ForumService {
 
     public fetchForum(forumID: string): Observable<any> {
         return this.http.get(`${environment.backendUrl}/forum/fetchForum?forumID=${forumID}`, this.httpOptions);
+        // return this.http.get(`${environment.backendUrl}/forum/${forumID}`, this.httpOptions);
     }
 
     public createForum(forum: Forum): Observable<any> {
         return this.http.post(`${environment.backendUrl}/forum/createForum`, forum, this.httpOptions)
     }
 
-    public playerJoin(playerData): Observable<any> {
+    public joinGame(playerData): Observable<any> {
         return this.http.put(`${environment.backendUrl}/forum/playerJoin`, playerData, this.httpOptions);
+    }
+
+    public sendMessage(forumID, message): Observable<any> {
+        return this.http.put(`${environment.backendUrl}/forum/${forumID}`, message, this.httpOptions);
+    }
+
+    public sendThreadMessage(forumID, postID, message): Observable<any> {
+        return this.http.put(`${environment.backendUrl}/forum/${forumID}/${postID}`, message, this.httpOptions);
+    }
+
+    public deletePostMessage(forumID, postID) {
+        return this.http.delete(`${environment.backendUrl}/forum/${forumID}/${postID}`, this.httpOptions);
+    }
+
+    public deleteThreadMessage(forumID, postID, threadID) {
+        return this.http.delete(`${environment.backendUrl}/forum/${forumID}/${postID}/${threadID}`, this.httpOptions);
     }
 
 }
